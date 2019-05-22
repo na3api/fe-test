@@ -186,7 +186,9 @@ a:hover, a:active{
 .view_tabs #myTab.nav-tabs .nav-link.active{
   color: #3897F0;
 }
-
+.tab-pane{
+  min-height: 300px;
+}
 @media (max-width: 768px) and (min-width: 576px){
   .logo .gradient-box {
     width: 140px;

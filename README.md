@@ -1,4 +1,7 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## How it works?
+
+1) **Task #1** run file build/index.html.
+2) **Task #2** click on second tab in the bottom of page.
 
 ## Available Scripts
 

@@ -5,7 +5,7 @@ class Numbers  extends React.Component {
         super(props);
         
         this.numbers = {
-            0: 'zero',
+            0: '',
             1: 'one',
             2: 'two',
             3: 'three',
@@ -27,7 +27,6 @@ class Numbers  extends React.Component {
             19: 'nineteen',
             20: 'twenty',
             30: 'thirty',
-            31: 'thirt',
             40: 'forty',
             50: 'fifty',
             60: 'sixty',
@@ -36,11 +35,14 @@ class Numbers  extends React.Component {
             90: 'ninety'
         };
 
-        this.decades = [
-            'hundred',
-            'thousand',
-            'million',
-        ];
+        this.decades = {
+            100 : 'hundred',
+            1000 : 'thousand',
+            1000000 : 'million',
+            1000000000 : 'billion',
+            1000000000000 : 'trillion',
+            1000000000000000 : 'quadrillion',
+        };
 
         this.state = {
             number: '',
@@ -67,53 +69,56 @@ class Numbers  extends React.Component {
             number: event.target.value
         }, () => {
             this.setState({
-                string_number: this.convert()
+                string_number: this.convert(this.state.number)
             });
         });
     };
 
-    convert = () => {
-        let number = parseInt(this.state.number);
+    convert = (number) => {
+        const thousand = 1000;
+        var result = '';
+        var remainder_of_division ;
+        var step = 0;
+        var hundreds = 0;
 
+        while(number >= 1){
+            remainder_of_division = number % thousand;
+
+            number = Math.floor(number / thousand);
+
+            hundreds = this.getHundreds(remainder_of_division);
+
+            result = hundreds + ' ' + (this.decades[Math.pow(thousand, step)] !== undefined && hundreds ? this.decades[Math.pow(thousand, step)] : '') + (result.replace(/\s/g, '') ? ', ' + result : '');
+
+            step++;
+        }
+
+        return result;
+    };
+
+    getDecades = (number) => {
         if(this.numbers[number] !== undefined){
             return this.numbers[number];
         }
 
-        if(this.numbers[number] !== undefined){
-            console.log(this.numbers[number]);
-        }
+        let second = number % 10;
+        let decades = Math.floor(number / 10) * 10;
 
-        function decades(number){
-            if(this.numbers[number] !== undefined){
-                console.log(this.numbers[number]);
-            }
-
-            let second = number % 10;
-            let decades = Math.floor(number / 10) * 10;
-
-            return this.numbers[decades] + (second !== 0 ? ' ' + this.numbers[second] : '' );
-        }
-
-        var string = '';
-        var sub = 10;
-        var end, old_end = 0;
-        while(sub < number){
-            if(end){
-                old_end = end;
-            }
-
-
-            sub *= 10;
-
-            end = number % sub;
-            let dex = Math.floor(end / (sub / 10));
-            let decades = Math.floor(number / sub);
-
-            console.log(dex + ' -> ' + sub/10 + ' -> ' + old_end + ' -> ' + end);
-            //console.log(decades(end));
-        }
+        return this.numbers[decades] + (second !== 0 ? ' ' + this.numbers[second] : '' );
     };
 
+    getHundreds = (number) => {
+        if(this.numbers[number] !== undefined){
+            return this.numbers[number];
+        }
+
+        if(number < 100){
+            return this.getDecades (number);
+        }else{
+            let hundreds = Math.floor(number / 100);
+            return this.numbers[hundreds] + ' ' + this.decades[100] + ' ' + this.getDecades (number % 100);
+        }
+    }
 }
 
 export default Numbers;
